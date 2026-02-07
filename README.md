@@ -47,8 +47,7 @@ docker-compose up --build
 
 ### Production Readiness
 
-- **Containerized Deployment** – Multi-stage Docker builds with security best practices
-- **Database Migrations** – Versioned schema evolution
+- **Containerized Deployment** – Secure Docker setup with non-root user and proper permissions
 - **Automated Testing** – Unit and integration test coverage
 - **OpenAPI Documentation** – Auto-generated Swagger specs
 - **Request Correlation** – Distributed tracing via correlation IDs
@@ -99,9 +98,10 @@ npm run start:dev
 ### Testing
 
 ```bash
-npm test              # Unit tests
-npm run test:e2e      # End-to-end tests
-npm run test:cov      # Coverage report
+npm test                     # All tests (unit + integration)
+npm run test:unit            # Unit tests only
+npm run test:integration     # Integration tests only
+npm run test:cov             # Coverage report
 ```
 
 ## 📊 Observability & Monitoring
