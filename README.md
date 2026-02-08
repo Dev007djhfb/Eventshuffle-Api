@@ -175,3 +175,10 @@ This codebase demonstrates domain-driven design principles, organizing code arou
 - **PostgreSQL** - ACID transactions for voting consistency
 - **Zod** - Runtime validation with TypeScript integration
 - **Docker** - Containerized deployment with security best practices
+
+### Database Pool Configuration
+
+- **DB_POOL_MAX**: Maximum number of connections in the database pool (default: 10)
+- **DB_POOL_MIN**: Minimum number of connections in the database pool (default: 0)
+- **DB_POOL_IDLE_TIMEOUT**: Time (ms) a connection can remain idle before being closed (default: 10000)
+- **DB_POOL_CONN_TIMEOUT**: Time (ms) to wait for a new connection before timing out (default: 5000)

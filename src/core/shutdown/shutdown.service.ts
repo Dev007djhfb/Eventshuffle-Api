@@ -1,5 +1,4 @@
 // Simple graceful shutdown service
-// TODO: Can be enhanced with more sophisticated shutdown orchestration in production
 
 import { Injectable, OnModuleDestroy, Logger } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
