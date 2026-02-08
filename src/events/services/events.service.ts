@@ -44,7 +44,7 @@ export class EventsService {
   async getAllEvents(): Promise<EventListResponseDto> {
     try {
       const events = await this.eventsRepository.findAllEvents();
-      return { events };
+      return { events: events.map(({ id, name }) => ({ id, name })) };
     } catch (error) {
       this.logger.error('Failed to get all events', error);
       throw error;
