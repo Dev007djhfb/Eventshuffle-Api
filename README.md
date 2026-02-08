@@ -1,7 +1,25 @@
 # EventShuffle API
 
-EventShuffle API is a production-ready NestJS backend for collaborative event scheduling and voting.
-It's built with enterprise-grade architecture, strong type safety, and first-class observability, making it reliable in production and pleasant to maintain.
+A NestJS backend for collaborative event scheduling and voting, demonstrating modern backend architecture patterns including clean architecture, domain-driven design, and comprehensive observability.
+
+Built with strong type safety and containerized deployment for technical evaluation purposes.
+
+## Problem & Solution
+
+EventShuffle solves the common challenge of coordinating group events where participants have different availability. Instead of endless email chains or chat messages, it provides:
+
+- **Event Creation** - Organizers propose multiple date options
+- **Democratic Voting** - Participants vote on their preferred dates
+- **Optimal Date Selection** - Algorithm finds dates that work for the most people
+
+## What This Demonstrates
+
+- **Clean Architecture** - Domain-driven design with clear separation of concerns
+- **Type Safety** - End-to-end TypeScript with runtime validation via Zod
+- **Containerization** - Docker setup with security best practices
+- **Testing Strategy** - Unit and integration tests with proper isolation
+- **API Design** - RESTful endpoints with OpenAPI documentation
+- **Observability** - Health checks, structured logging, and metrics
 
 ## 🚀 Quick Start
 
@@ -11,7 +29,7 @@ It's built with enterprise-grade architecture, strong type safety, and first-cla
 - Docker Compose
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Dev007djhfb/Eventshuffle-Api
 cd eventshuffle-api
 
 # Copy environment variables and customize if needed
@@ -26,6 +44,39 @@ docker-compose up --build
 - **API**: http://localhost:3000
 - **Swagger Docs**: http://localhost:3000/docs
 - **Health Check**: http://localhost:3000/api/v1/health
+
+## Example Usage
+
+```bash
+# Create an event
+curl -X POST http://localhost:3000/api/v1/event \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Team Lunch", "dates": ["2026-03-15", "2026-03-16"]}'
+
+# Vote on dates
+curl -X POST http://localhost:3000/api/v1/event/{id}/vote \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alice", "votes": ["2026-03-15"]}'
+
+# Get optimal dates
+curl http://localhost:3000/api/v1/event/{id}/results
+```
+
+## System Architecture
+
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   Client    │───▶│  NestJS API │───▶│ PostgreSQL  │
+│             │    │             │    │             │
+│ REST/Swagger│    │ Clean Arch  │    │ ACID Trans  │
+└─────────────┘    └─────────────┘    └─────────────┘
+                           │
+                           ▼
+                   ┌─────────────┐
+                   │Observability│
+                   │Health+Metric│
+                   └─────────────┘
+```
 
 ## 🏗️ Architecture & Design
 
@@ -45,7 +96,7 @@ docker-compose up --build
 - **Centralized Error Handling** – Global exception filters with consistent responses
 - **Graceful Shutdowns** – Proper cleanup of resources and connections
 
-### Production Readiness
+### Implementation Features
 
 - **Containerized Deployment** – Secure Docker setup with non-root user and proper permissions
 - **Automated Testing** – Unit and integration test coverage
@@ -114,22 +165,21 @@ npm run test:cov             # Coverage report
 
 ## 🔧 Technical Decisions
 
-### Why NestJS?
+### Architecture Approach
 
-NestJS provides a scalable, opinionated architecture with first-class TypeScript support, dependency injection, and a rich ecosystem well-suited for long-lived backend services.
+This codebase demonstrates domain-driven design principles, organizing code around business domains (events, voting) rather than technical layers. NestJS provides the foundation with TypeScript support, dependency injection, and a scalable module system.
 
-### Why Drizzle ORM?
+### Key Technology Choices
 
-Drizzle offers strong type safety without code generation, excellent performance, and explicit control over SQL when needed—ideal for predictable, maintainable data access.
+- **Drizzle ORM** - Type-safe database queries without code generation
+- **PostgreSQL** - ACID transactions for voting consistency
+- **Zod** - Runtime validation with TypeScript integration
+- **Docker** - Containerized deployment with security best practices
 
-### Why PostgreSQL?
+## Assignment Notes
 
-PostgreSQL ensures ACID-compliant transactions for voting consistency, strong concurrency guarantees, and flexible JSON support for evolving schemas.
+This implementation demonstrates:
 
-### Domain-Driven Structure
-
-Organizing the codebase around business domains (events, voting) improves maintainability, clarifies ownership, and scales better as the system grows.
-
----
-
-_Built with modern practices for scalability, maintainability, and production reliability._
+- **Scalable Architecture** - Modular design supporting future feature growth
+- **Enterprise Patterns** - Repository pattern, dependency injection, clean architecture
+- **Operational Excellence** - Comprehensive testing, observability, containerization

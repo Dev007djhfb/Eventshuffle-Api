@@ -58,15 +58,10 @@ describe('Events Integration Tests', () => {
     module.useLogger(false);
     service = module.get<EventsService>(EventsService);
     repository = module.get<EventsRepository>(EventsRepository);
-
-    // Clean using ORM
-    await testDb.delete(schema.eventVotes);
-    await testDb.delete(schema.eventDates);
-    await testDb.delete(schema.events);
   });
 
   beforeEach(async () => {
-    // Clean using ORM
+    // Clean before each test to ensure isolation
     await testDb.delete(schema.eventVotes);
     await testDb.delete(schema.eventDates);
     await testDb.delete(schema.events);
