@@ -32,7 +32,7 @@ export class EventsController {
     type: EventListResponseDto,
   })
   async listEvents(): Promise<EventListResponseDto> {
-    return this.eventsService.listEvents();
+    return this.eventsService.getAllEvents();
   }
 
   @Version('1')

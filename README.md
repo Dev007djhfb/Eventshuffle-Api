@@ -101,7 +101,7 @@ curl http://localhost:3000/api/v1/event/{id}/results
 - **Containerized Deployment** – Secure Docker setup with non-root user and proper permissions
 - **Automated Testing** – Unit and integration test coverage
 - **OpenAPI Documentation** – Auto-generated Swagger specs
-- **Request Correlation** – Distributed tracing via correlation IDs
+- **Request Correlation** – Unique request IDs for error tracking and debugging
 - **Rate Limiting** – Multi-tier throttling to protect critical endpoints
 
 ## 🛠️ Tech Stack
@@ -161,7 +161,7 @@ npm run test:cov             # Coverage report
 - **Structured Logging** – JSON logs with request context
 - **Error Reporting** – Centralized exception handling with metadata
 - **Performance Metrics** – Latency, throughput, and error rates
-- **Request Tracing** – End-to-end correlation across services
+- **Request Tracing** – Request correlation IDs for debugging and monitoring
 
 ## 🔧 Technical Decisions
 

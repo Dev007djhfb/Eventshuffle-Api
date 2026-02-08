@@ -2,7 +2,6 @@ import 'dotenv/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventsService } from '../../src/events/services/events.service';
 import { EventsRepository } from '../../src/events/repository/events.repository';
-import { EventsValidationService } from '../../src/events/services/events-validation.service';
 import { MetricsService } from '../../src/core/telemetry/metrics.service';
 import { DATABASE_CONNECTION } from '../../src/core/database/database.module';
 import { drizzle } from 'drizzle-orm/postgres-js';
@@ -17,7 +16,6 @@ describe('Events Integration Tests', () => {
   let connection: postgres.Sql;
 
   beforeAll(async () => {
-    // Use environment variables - NO hardcoded URLs!
     const testConnectionString =
       process.env.TEST_DATABASE_URL || process.env.DATABASE_URL;
 
@@ -39,7 +37,6 @@ describe('Events Integration Tests', () => {
     module = await Test.createTestingModule({
       providers: [
         EventsService,
-        EventsValidationService,
         EventsRepository,
         {
           provide: DATABASE_CONNECTION,

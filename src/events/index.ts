@@ -1,7 +1,6 @@
 // Events module exports
 export * from './controllers/events.controller';
 export * from './services/events.service';
-export * from './services/events-validation.service';
 export * from './repository';
 export * from './dto';
 export * from './schemas';

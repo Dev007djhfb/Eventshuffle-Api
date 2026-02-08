@@ -1,34 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventsService } from '../../src/events/services/events.service';
 import { EventsRepository } from '../../src/events/repository/events.repository';
-import { EventsValidationService } from '../../src/events/services/events-validation.service';
-import { MetricsService } from '../../src/core/telemetry/metrics.service';
 
 describe('Events Unit Tests', () => {
   let service: EventsService;
-  let repository: EventsRepository;
+  let repository: any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EventsService,
-        EventsValidationService,
         {
           provide: EventsRepository,
           useValue: {
             createEvent: jest.fn(),
             findEventById: jest.fn(),
-            addVotes: jest.fn(),
-            getEventWithVotes: jest.fn(),
-            getEventResults: jest.fn(),
-            findEventWithVotes: jest.fn(),
-          },
-        },
-        {
-          provide: MetricsService,
-          useValue: {
-            recordDatabaseQuery: jest.fn(),
-            incrementCounter: jest.fn(),
+            findEventDates: jest.fn(),
+            findEventVotes: jest.fn(),
+            deleteVotesForUser: jest.fn(),
+            insertVotes: jest.fn(),
+            findAllEvents: jest.fn(),
           },
         },
       ],
@@ -107,17 +98,44 @@ describe('Events Unit Tests', () => {
     const mockEvent = {
       id: eventId,
       name: 'Test Event',
-      dates: ['2026-03-01', '2026-03-02'],
-      votes: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
-    jest.spyOn(repository, 'getEventWithVotes').mockResolvedValue(mockEvent);
-    jest.spyOn(repository, 'addVotes').mockResolvedValue(undefined);
+    const mockDates = [
+      {
+        id: '1',
+        eventId,
+        date: '2026-03-01',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: '2',
+        eventId,
+        date: '2026-03-02',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
+
+    const mockVotes = [];
+
+    jest.spyOn(repository, 'findEventById').mockResolvedValue(mockEvent);
+    jest.spyOn(repository, 'findEventDates').mockResolvedValue(mockDates);
+    jest.spyOn(repository, 'findEventVotes').mockResolvedValue(mockVotes);
+    jest.spyOn(repository, 'deleteVotesForUser').mockResolvedValue(undefined);
+    jest.spyOn(repository, 'insertVotes').mockResolvedValue(undefined);
 
     await service.addVote(eventId, voteDto);
 
-    expect(repository.getEventWithVotes).toHaveBeenCalledWith(eventId);
-    expect(repository.addVotes).toHaveBeenCalledWith(eventId, voteDto);
+    expect(repository.findEventById).toHaveBeenCalledWith(eventId);
+    expect(repository.findEventDates).toHaveBeenCalledWith(eventId);
+    expect(repository.deleteVotesForUser).toHaveBeenCalledWith(
+      eventId,
+      'Alice',
+    );
+    expect(repository.insertVotes).toHaveBeenCalled();
   });
 
   it('should reject voting on non-existent events', async () => {
@@ -127,7 +145,7 @@ describe('Events Unit Tests', () => {
       votes: ['2026-03-01'],
     };
 
-    jest.spyOn(repository, 'getEventWithVotes').mockResolvedValue(null);
+    jest.spyOn(repository, 'findEventById').mockResolvedValue(null);
 
     await expect(service.addVote(eventId, voteDto)).rejects.toThrow();
   });

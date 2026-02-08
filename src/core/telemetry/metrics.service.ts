@@ -1,12 +1,11 @@
 // Simple metrics service for basic observability
-// TODO: Can be enhanced with more sophisticated monitoring in production
 
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as client from 'prom-client';
 
 @Injectable()
 export class MetricsService implements OnModuleInit {
-  // Essential metrics for production monitoring
+  // Essential metrics for monitoring
   private readonly httpRequestTotal: client.Counter<string>;
   private readonly httpRequestDuration: client.Histogram<string>;
   private readonly activeConnections: client.Gauge<string>;
