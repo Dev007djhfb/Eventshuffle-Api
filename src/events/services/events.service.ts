@@ -9,22 +9,11 @@ import {
 } from '../dto';
 import { EventsRepository } from '../repository/events.repository';
 import {
-  ResourceNotFoundException,
-  ValidationException,
-} from '../../core/errors/custom-exceptions';
-import { CreateEventSchema, CreateVoteSchema } from '../schemas';
-import { ZodError } from 'zod';
-import {
-  hasPastDates,
-  hasUniqueDates,
+  handleZodError,
   groupVotesByDate,
   countVotesByDate,
   getSuitableDates,
-  validateUUIDOrThrow,
   getValidatedEvent,
-  handleZodError,
-  validateVoterName,
-  validateVoteDates,
   prepareVoteValues,
   validateVoteSubmission,
   validateEventCreation,

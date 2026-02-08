@@ -13,16 +13,13 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-  // ✅ tell Nest to use Pino
   app.useLogger(app.get(Logger));
 
-  // ✅ Enable API versioning
   app.enableVersioning({
     type: VersioningType.URI,
     prefix: 'api/v',
   });
 
-  // ✅ global error handling
   const httpAdapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost));
 
@@ -42,7 +39,6 @@ async function bootstrap() {
   const port = process.env.PORT || 3000;
   const server = await app.listen(port);
 
-  // 🛡️ Setup graceful shutdown
   const shutdownService = app.get(ShutdownService);
   shutdownService.setServer(server);
 
@@ -52,7 +48,6 @@ async function bootstrap() {
   console.log(`📊 Metrics: http://localhost:${port}/metrics`);
   console.log(`🛡️  Graceful shutdown enabled`);
 
-  // Enable graceful shutdown hooks
   app.enableShutdownHooks();
 }
 

@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { Test, TestingModule } from '@nestjs/testing';
 import { EventsService } from '../../src/events/services/events.service';
 import { EventsRepository } from '../../src/events/repository/events.repository';
 import { MetricsService } from '../../src/core/telemetry/metrics.service';
@@ -7,6 +6,7 @@ import { DATABASE_CONNECTION } from '../../src/core/database/database.module';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from '../../src/core/database/schema';
+import { Test, TestingModule } from '@nestjs/testing';
 
 describe('Events Integration Tests', () => {
   let service: EventsService;
@@ -53,12 +53,11 @@ describe('Events Integration Tests', () => {
     }).compile();
 
     module.useLogger(false);
-    service = module.get<EventsService>(EventsService);
-    repository = module.get<EventsRepository>(EventsRepository);
+    service = module.get(EventsService);
+    repository = module.get(EventsRepository);
   });
 
   beforeEach(async () => {
-    // Clean before each test to ensure isolation
     await testDb.delete(schema.eventVotes);
     await testDb.delete(schema.eventDates);
     await testDb.delete(schema.events);
@@ -77,10 +76,8 @@ describe('Events Integration Tests', () => {
       dates: ['2026-03-01', '2026-03-02'],
     });
 
-    // Verify UUID format
     expect(result.id).toMatch(/^[0-9a-f-]{36}$/i);
 
-    // Verify through service layer (not raw SQL)
     const retrievedEvent = await service.getEvent(result.id);
     expect(retrievedEvent.id).toBe(result.id);
     expect(retrievedEvent.name).toBe('Test Event');
@@ -103,9 +100,8 @@ describe('Events Integration Tests', () => {
       votes: ['2026-04-01', '2026-04-02'],
     });
 
-    // Test through service API, not raw queries
     const results = await service.getEventResults(event.id);
-    expect(results.suitableDates).toHaveLength(1); // Only 2026-04-01 has 2 votes
+    expect(results.suitableDates).toHaveLength(1);
 
     const topDate = results.suitableDates.find((d) => d.date === '2026-04-01');
     expect(topDate?.people).toEqual(['Alice', 'Bob']);
@@ -114,7 +110,6 @@ describe('Events Integration Tests', () => {
   it('should handle error scenarios gracefully', async () => {
     const fakeId = '550e8400-e29b-41d4-a716-446655440999';
 
-    // Test service-level error handling
     await expect(service.getEvent(fakeId)).rejects.toThrow();
     await expect(service.getEventResults(fakeId)).rejects.toThrow();
     await expect(
